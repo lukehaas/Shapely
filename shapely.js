@@ -39,8 +39,6 @@
 							this[0] = ctx;
 						} catch(e) {}
 
-						//this.context = document;
-						//this.selector = selector;
 						return this;
 					} else {
 						res = get(selector,document);
@@ -137,15 +135,7 @@
 		    this.style = {
 		    	strokeStyle:"solid",
 		    	strokeWidth:1
-	
 		    }
-		    
-		  // --style--
-		    //strokeColor
-		    //gradient
-		    //opacity
-		    	//fillopacity, stroke opacity?
-		    //shadow
 		}
 		Shape.prototype.extend = function(options) {
 			var key;
@@ -673,7 +663,7 @@
 		}
 		var animation_count = 0;
 		shapely.fun.animate = function() {
-			
+			//animation is a work in progress
 			var i = 0,
 				l = this.length,
 				elem,
@@ -706,10 +696,8 @@
 		}
 
 		function tick(elem,shape,options) {
+			//animation is a work in progress
 
-				//console.log(animation_q);
-			
-			
 			animation_q[animation_count].method(elem,shape,options);
 
 		}
