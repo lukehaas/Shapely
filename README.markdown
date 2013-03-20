@@ -27,3 +27,16 @@ shapely('#example').circle({
 });
 
 This draws a circle, star, and rectangle on the canvas. Each shape instance receives basic size, position rotaion, and opacity parameters, as well as a style object which includes parameters for fill and stroke colour and patterns, shadows, and gradients
+
+Shapely can also animate shapes by adding .animate() to the end of a shape declaration
+
+
+shapely('#example').circle({
+	x:20,
+	y:20,
+	radius:200,
+	style:{fill:"#000000"}
+}).animate({
+	x:50,
+	radius:100
+})
