@@ -40,3 +40,25 @@ shapely('#example').circle({
 	x:50,
 	radius:100
 })
+
+This can be used to animate miltiple shapes
+
+shapely('#example').circle({
+	x:20,
+	y:20,
+	radius:200,
+	style:{fill:"#000000"}
+}).animate({
+	x:50,
+	radius:100
+}).rectangle({
+	x:20,
+	y:20,
+	width:200,
+	height:200,
+	style:{fill:"#000000"}
+}).animate({
+	x:50,
+	y:90,
+	width:600
+});

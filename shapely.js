@@ -1,5 +1,5 @@
 // ┌────────────────────────────────────────────────────────────────────┐ \\
-// │ Shapely 0.2 - JavaScript Canvas Library                          	│ \\
+// │ Shapely 0.3 - JavaScript Canvas Library                          	│ \\
 // ├────────────────────────────────────────────────────────────────────┤ \\
 // │ Copyright © 2013 Luke Haas (http://lukehaas.me)    				│ \\
 // ├────────────────────────────────────────────────────────────────────┤ \\
@@ -12,19 +12,19 @@
 	var
 	document = window.document,
 	rquickExpr = /^(?:#([\w-]+)|(\w+)|\.([\w-]+))$/,
-	version = "0.1",
+	version = "0.3",
 	guid,
 	stack,
 	shapely = function( selector, context ) {
 		return new shapely.fun.init( selector, context );
 	};
-	
 	shapely.fun = shapely.prototype = {
 		shapely_version: version,
 		constructor: shapely,
 		init: function( selector, context ) {
 			guid = 0;
 			stack = [];
+			tween.init();
 			var match,elem,ctx,res;
 			
 			if ( !selector ) {
@@ -700,6 +700,7 @@
 			elem.rotate(options.rotation*shape.radian);
 			
 		}
+
 		elem.beginPath();
 		elem.moveTo(shape.width+shape.x, shape.yrad+shape.y);
 			
@@ -782,8 +783,9 @@ shapely.fun.animate = function() {
 	options.onComplete = arguments[3] || function(){};
 	options.elems = this;
 	options.elemsLength = this.length;
+	options.sub = guid-1;
 
-	
+
 	tween.setOptions(options);
 	stack[guid-1].diff = diffExtend(stack[guid-1].options,options);
 
@@ -796,15 +798,29 @@ shapely.fun.animate = function() {
 }
 
 var tween = {
+	
+	init:function() {
 
+		this.i = 0;
+		this.options = [];
+		this.timer = [];
+		this.time = [];
+		this.from = [];
+		this.to = [];
+		this.dimension = [];
+		this.now = [];
+		this.cTime = [];
+		this.queue = [];
+	},
+	
 	setOptions: function(options){
 
 		
-		this.options = extender({
+		this.options[this.i++] = extender({
 			onStart: function(){},
 			onComplete: function(){},
 			transition: Transitions.easeInOutSine,
-			duration: 500,
+			duration: 1000,
 			wait: true,
 			fps: 50
 		}, options || {});
@@ -813,48 +829,54 @@ var tween = {
 
 	step: function(){
 
-		var time = new Date().getTime();
-		if (time < this.time + this.options.duration){
-			this.cTime = time - this.time;
-			this.setNow(false);
-		} else {
-			setTimeout(this.options.onComplete.bind(this), 10);
-			this.clearTimer();
-			this.setNow(true);
-			//this.now = this.to;
+		var time = new Date().getTime(),
+			i = 0,
+			l = this.options.length;
 
+		for(;i<l;i++) {
+			if (time < this.time[i] + this.options[i].duration){
+				this.cTime[i] = time - this.time[i];
+				this.setNow(false,i);
+			} else {
+
+				setTimeout(this.options[i].onComplete.bind(this), 10);
+				this.clearTimer(i);
+				this.setNow(true,i);
+
+			}
+			this.increase(i);
 		}
-		this.increase();
 	},
 
-	setNow: function(finish){
+	setNow: function(finish,z){
 		
 		var i = 0;
+
 		if(finish) {
-			for(;i<this.to.length;i++) {
-				this.now[this.dimension[i]] = this.to[i];
+			for(;i<this.to[z].length;i++) {
+				this.now[z][this.dimension[z][i]] = this.to[z][i];
 			}
 		} else {
-			for(;i<this.to.length;i++) {
-				if(this.dimension[i]=='style') {
+			for(;i<this.to[z].length;i++) {
+				if(this.dimension[z][i]=='style') {
 					
-					this.now[this.dimension[i]] = this.computeStyle(this.from[i], this.to[i]);
+					this.now[z][this.dimension[z][i]] = this.computeStyle(this.from[z][i], this.to[z][i],z);
 				} else {
-					this.now[this.dimension[i]] = this.compute(this.from[i], this.to[i]);	
+					this.now[z][this.dimension[z][i]] = this.compute(this.from[z][i], this.to[z][i],z);	
 				}
 			}
 		}
 
 	},
 
-	compute: function(from, to){
+	compute: function(from, to, i){
 		
 		var change = to - from;
 
-		return this.options.transition(this.cTime, from, change, this.options.duration);
+		return this.options[i].transition(this.cTime[i], from, change, this.options[i].duration);
 	},
 
-	computeStyle: function(from, to) {
+	computeStyle: function(from, to, i) {
 		
 		var key,
 			change,
@@ -862,41 +884,42 @@ var tween = {
 		for(key in to) {
 			if(typeof to[key] == "number") {
 				change = to[key] - from[key];
-				newStyle[key] = Transitions.linear(this.cTime, from[key], change, this.options.duration);
+				newStyle[key] = Transitions.linear(this.cTime[i], from[key], change, this.options[i].duration);
 			}
 
 		}
 		return newStyle;
 	},
 
-	clearTimer: function(){
-		clearInterval(this.timer);
-		this.timer = null;
+	clearTimer: function(i){
+		clearInterval(this.timer[i]);
+		this.timer[i] = null;
 		return this;
 	},
 
 	_start: function(from,to){
 
-		var key;
-		if (!this.options.wait) this.clearTimer();
-		if (this.timer) return;
+		var key,
+			i = this.i-1;
+		if (!this.options[i].wait) this.clearTimer(i);
+		if (this.timer[i]) return;
 
-		setTimeout(this.options.onStart.bind(this), 10);
+		setTimeout(this.options[i].onStart.bind(this), 10);
 		
-		this.from = [];
-		this.to = [];
-		this.dimension = [];
+		this.from[i] = [];
+		this.to[i] = [];
+		this.dimension[i] = [];
 
-		this.now = from;
+		this.now[i] = from;
 
 		for(key in to) {
-			this.from.push(from[key]);
-			this.to.push(to[key]);
-			this.dimension.push(key);
+			this.from[i].push(from[key]);
+			this.to[i].push(to[key]);
+			this.dimension[i].push(key);
 		}
 
-		this.time = new Date().getTime();
-		this.timer = setInterval(this.step.bind(this), Math.round(1000/this.options.fps));
+		this.time[i] = new Date().getTime();
+		this.timer[i] = setInterval(this.step.bind(this), Math.round(1000/this.options[i].fps));
 		
 
 		return this;
@@ -908,33 +931,39 @@ var tween = {
 		return this._start(from,to);
 	},
 
-	set: function(to){
-		this.now = to;
-		this.increase();
-		return this;
+	clearCanvas: function(elem) {
+		elem.clearRect(0,0,elem.canvas.width,elem.canvas.height);
 	},
 
-	setStyle: function(v) {
+	setStyle: function(v,k) {
 
-		var i,z;
+		var i,z,sub;
 		i = z = 0;
-		for(;z<this.options.elemsLength;z++) {
+		sub = this.options[k].sub;
+		for(;z<this.options[k].elemsLength;z++) {
 			
-			this.options.elems[z].clearRect(0,0,this.options.elems[z].canvas.width,this.options.elems[z].canvas.height);
-
+			
+			this.clearCanvas(this.options[k].elems[z]);
 			i = 0;
 			for(;i<guid;i++) {
 				if(stack[i].animation) {
 					
-					//this.subject.shape.extend(v);
+					if(i==sub) {
+						
+						this.queue[sub] = {v:v,stack:stack[i]};
+						stack[i].shape.extend(v);
 
-					//this.subject.method(this.options.elems[z],this.subject.shape,v);
+						stack[i].method(this.options[k].elems[z],stack[i].shape,v);
 
-					stack[i].shape.extend(v);
+					} else if(this.queue[i]) {
 
-					stack[i].method(this.options.elems[z],stack[i].shape,v);
+						this.queue[i].stack.shape.extend(this.queue[i].v);
+
+						this.queue[i].stack.method(this.options[k].elems[z],this.queue[i].stack.shape,this.queue[i].v);
+					}
+
 				} else{
-					stack[i].method(this.options.elems[z],stack[i].shape,stack[i].options);
+					stack[i].method(this.options[k].elems[z],stack[i].shape,stack[i].options);
 				}
 				
 			}
@@ -943,14 +972,17 @@ var tween = {
 
 	},
 
-	increase: function(){
-		this.setStyle(this.now);
+	increase: function(i){
+		
+		
+		this.setStyle(this.now[i],i);
 	}
 
 };
 
 //Transitions (c) 2003 Robert Penner (http://www.robertpenner.com/easing/), BSD License.
 var Transitions = {
+	//t - start time, b - start value, c - change, d - duration
 	linear: function(t, b, c, d) { return c*t/d + b; },
 	easeInQuad: function(t, b, c, d) { return c*(t/=d)*t + b; },
 	easeOutQuad: function(t, b, c, d) { return -c *(t/=d)*(t-2) + b; },
