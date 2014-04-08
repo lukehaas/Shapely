@@ -71,7 +71,7 @@ text()
 - value
 - rotation - degrees
 	
-image()  
+image()
 - x
 - y
 - src
