@@ -24,60 +24,60 @@ shapely('#example').circle({ x:20, y:20, radius:200, style:{fill:"#000000"} }).a
 ## Usage ##
 
 
-star()
-	- x
-	- y
-	- radius
-	- rotation - degrees
+star()  
+- x
+- y
+- radius
+- rotation - degrees
 	
-triangle()
-	- x
-	- y
-	- radius
-	- rotation - degrees
+triangle()  
+- x
+- y
+- radius
+- rotation - degrees
 	
-line()
-	- x
-	- y
-	- width or height - (depending on if vertical or horizontal)
-	- dashWidth
-	- dashGap
-	- rotation - degrees
+line()  
+- x
+- y
+- width or height - (depending on if vertical or horizontal)
+- dashWidth
+- dashGap
+- rotation - degrees
 	
-rect()
-	- x
-	- y
-	- width
-	- height
-	- rotation (degrees)
-	- cornerRadius
+rect()  
+- x
+- y
+- width
+- height
+- rotation (degrees)
+- cornerRadius
 	
-circle()
-	- x
-	- y
-	- radius
-	- rotation (degrees)
+circle()  
+- x
+- y
+- radius
+- rotation (degrees)
 	
-polygon()
-	- x
-	- y
-	- sides
-	- radius
-	- rotation (degrees)
+polygon()  
+- x
+- y
+- sides
+- radius
+- rotation (degrees)
 	
-text()
-	- x
-	- y
-	- value
-	- rotation - degrees
+text()  
+- x
+- y
+- value
+- rotation - degrees
 	
-image()
-	- x
-	- y
-	- src
-	- width
-	- height
-	- rotation - degrees
+image()  
+- x
+- y
+- src
+- width
+- height
+- rotation - degrees
 	
 ### Style ###
 
