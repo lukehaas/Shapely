@@ -376,14 +376,15 @@
 			l = this.length,
 			shape,
 			elem,
-			vertical = true;
+			vertical = true,
 			options = arguments[0] || {};
 			
 		shape = new Shape();
 		shape.extend(options);
 		shape.length = Math.max(shape.width,shape.height);
+		shape.vertical = true;
 		if(shape.width>shape.height) {
-			vertical = false;
+			shape.vertical = false;
 		}
 		stack[guid++] = {shape:shape,method:drawLine,options:options,animation:false};
 		
@@ -517,7 +518,7 @@
 			
 		if(options.style.strokeStyle=="dashed") {
 			space = false;
-			if(vertical) {
+			if(shape.vertical) {
 				dashPosition = shape.y;
 				end = shape.length + shape.y;
 				while(dashPosition<end) {
@@ -554,7 +555,7 @@
 			}
 		} else {
 			
-			if(vertical) {
+			if(shape.vertical) {
 				elem.lineTo(shape.x,shape.y+shape.length);
 			} else {
 				elem.lineTo(shape.x+shape.length,shape.y);
