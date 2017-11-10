@@ -1,0 +1,26 @@
+{
+  "name": "shapely",
+  "version": "1.0.0",
+  "description": "A library for drawing and animating shapes on the canvas",
+  "main": "shapely.js",
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lukehaas/Shapely.git"
+  },
+  "keywords": [
+    "canvas",
+    "animation"
+  ],
+  "author": "Luke Haas",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lukehaas/Shapely/issues"
+  },
+  "homepage": "https://github.com/lukehaas/Shapely#readme"
+}

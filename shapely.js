@@ -1,57 +1,45 @@
 // ┌────────────────────────────────────────────────────────────────────┐ \\
-// │ Shapely 0.3 - JavaScript Canvas Library                            │ \\
+// │ Shapely 1.0 - JavaScript Canvas Library                            │ \\
 // ├────────────────────────────────────────────────────────────────────┤ \\
-// │ Copyright © 2013 Luke Haas (http://lukehaas.me)                    │ \\
+// │ Copyright © 2013 Luke Haas (https://lukehaas.me)                   │ \\
 // ├────────────────────────────────────────────────────────────────────┤ \\
 // │ Licensed under the MIT license.                                    | \\
 // └────────────────────────────────────────────────────────────────────┘ \\
 
-
-(function(window,undefined) {
-"use strict";
+(function(global, factory) {
+  "use strict";
+  if (typeof define === 'function' && define.amd) {
+    define(['b'], factory);
+  } else if(typeof module === 'object' && module.exports) {
+    module.exports = factory(global);
+  } else {
+    factory(global);
+  }
+}(typeof window !== 'undefined' ? window : this, function(window, undefined) {
   var
-  document = window.document,
-  rquickExpr = /^(?:#([\w-]+)|(\w+)|\.([\w-]+))$/,
-  version = "0.3",
+  version = "1.0",
   guid,
   stack,
   img,
-  shapely = function( selector, context ) {
-    return new shapely.fun.init( selector, context );
+  shapely = function( ctx ) {
+    return new shapely.fun.init( ctx );
   };
   shapely.fun = shapely.prototype = {
     shapely_version: version,
     constructor: shapely,
-    init: function( selector, context ) {
+    init: function( ctx ) {
       guid = 0;
       stack = [];
       img = new Image();
       tween.init();
-      var match,elem,ctx,res;
-
-      if ( !selector ) {
+      if ( !ctx ) {
         return this;
       }
-
-      if ( typeof selector === "string" ) {
-
-        match = rquickExpr.exec( selector );
-
-        if(match && match[1]) {
-
-          elem = document.getElementById(match[1]);
-          try {
-            ctx = elem.getContext("2d");
-            this.length = 1;
-            this[0] = ctx;
-          } catch(e) {}
-
-          return this;
-        } else {
-          res = get(selector,document);
-
-          return merge( this.constructor(), res );
-        }
+      if(Array.isArray(ctx)) {
+        return merge( this.constructor(), ctx );
+      } else {
+        this.length = 1;
+        this[0] = ctx;
       }
       return this;
     },
@@ -59,34 +47,10 @@
     splice: [].slice
   };
   shapely.fun.init.prototype = shapely.fun;
-
-  function get(selector,context) {
-    var match = rquickExpr.exec( selector ),
-    col,
-    ret,
-    i = 0,
-    ctx;
-    col = ret = [];
-    if(match[3] && context.getElementsByClassName) {
-
-      col = [].slice.call(context.getElementsByClassName( match[3] ), 0)
-
-    } else if(match[2]) {
-      col = [].slice.call( context.getElementsByTagName(selector), 0);
-    }
-    i = col.length;
-    while(i--) {
-      try {
-        ctx = col[i].getContext("2d");
-        ret.push(ctx);
-      } catch(e) {}
-    }
-    return ret;
-  }
   function merge(first,second) {
     var l = second.length,
-      i = first.length,
-      j = 0;
+    i = first.length,
+    j = 0;
 
     if ( typeof l === "number" ) {
       for ( ; j < l; j++ ) {
@@ -100,13 +64,6 @@
     first.length = i;
 
     return first;
-  }
-
-  //depricated
-  var idMeths = {
-    gen:function() {
-      return "shapely" + ( shapely_version + Math.random() ).replace( /\D/g, "" );
-    }
   }
   function extender(base,options) {
     var key;
@@ -1024,5 +981,5 @@ var Transitions = {
 };
 
   window.shapely = shapely;
-
-})(window);
+  return shapely;
+}));

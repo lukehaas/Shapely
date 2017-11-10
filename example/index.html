@@ -5,197 +5,197 @@
  <head>
   <meta charset="UTF-8" />
   <title>shapely example</title>
-  <script src="shapely.js"></script>
+  <script src="../shapely.js"></script>
   <script src="jquery-1.9.1.min.js"></script>
   <script>
   $(function() {
-  	var width = $(document).width(),
-  		height = $(document).height();
-  	var cenX = width/2,
-  		cenY = height/2;
-  	$("#canvas").attr({"width":width+"px","height":height+"px"});
+    var width = $(document).width(),
+      height = $(document).height();
+    var cenX = width/2,
+      cenY = height/2;
+    $("#canvas").attr({"width":width+"px","height":height+"px"});
+    var ctx = $("#canvas")[0].getContext("2d");
+    (function mainScene() {
+      shapely(ctx).rect({
+        x:cenX,
+        y:cenY,
+        width:1,
+        height:1,
+        style:{fill:"#000000",opacity:0.1}
+        //fillGradient:{type:"radial",positions:{x1:,y1:,r1:,x2:,y2:,r2:},colors:{}}}
+      }).animate({
+        x:0,
+        y:0,
+        width:width,
+        height:height,
+        style:{opacity:1}
+      },600,'easeInOutSine',function() {
+        setTimeout(stars,400);
+      });
+      window.mainScene = mainScene;
+    })();
 
-  	(function mainScene() {
-  		shapely("#canvas").rect({
-  			x:cenX,
-  			y:cenY,
-  			width:1,
-  			height:1,
-  			style:{fill:"#000000",opacity:0.1}
-  			//fillGradient:{type:"radial",positions:{x1:,y1:,r1:,x2:,y2:,r2:},colors:{}}}
-  		}).animate({
-  			x:0,
-  			y:0,
-  			width:width,
-  			height:height,
-  			style:{opacity:1}
-  		},600,'easeInOutSine',function() {
-  			setTimeout(stars,400);
-  		});
-  		window.mainScene = mainScene;
-  	})();
+    var i = 0;
+    function stars() {
+      function star() {
 
-  	var i = 0;
-  	function stars() {
-  		function star() {
+      //var color = arguments[0] || "#ffffff";
+      var ran1 = parseInt((Math.random()*5)+9).toString(16) + parseInt((Math.random()*9)+1),
+        ran2 = parseInt((Math.random()*5)+9).toString(16) + parseInt((Math.random()*9)+1),
+        ran3 = parseInt((Math.random()*5)+9).toString(16) + parseInt((Math.random()*9)+1);
 
-			//var color = arguments[0] || "#ffffff";
-			var ran1 = parseInt((Math.random()*5)+9).toString(16) + parseInt((Math.random()*9)+1),
-				ran2 = parseInt((Math.random()*5)+9).toString(16) + parseInt((Math.random()*9)+1),
-				ran3 = parseInt((Math.random()*5)+9).toString(16) + parseInt((Math.random()*9)+1);
+      var color = "#" + ran1 + ran2 + ran3;
 
-			var color = "#" + ran1 + ran2 + ran3;
+        return {
+        x:cenX,
+        y:cenY,
+        radius:1,
+        style:{fill:color,opacity:0.1}}};
 
-  			return {
-  			x:cenX,
-  			y:cenY,
-  			radius:1,
-  			style:{fill:color,opacity:0.1}}};
+      shapely(ctx).rect({
+        x:0,
+        y:0,
+        width:width,
+        height:height,
+        style:{fill:"#000000"}
+      }).star(star()).animate({
+        x:0,
+        y:-150,
+        radius:70,
+        style:{opacity:1}
+      },1500).star(star()).animate({
+        x:cenX*0.5,
+        y:-150,
+        radius:80,
+        style:{opacity:1}
+      },500).star(star()).animate({
+        x:cenX*1.7,
+        y:-200,
+        radius:85,
+        style:{opacity:1}
+      },800).star(star()).animate({
+        x:width+180,
+        y:cenY/1.5,
+        radius:90,
+        style:{opacity:1}
+      },1200).star(star()).animate({
+        x:width+180,
+        y:cenY*1.6,
+        radius:65,
+        style:{opacity:1}
+      },900).star(star()).animate({
+        x:cenX*1.8,
+        y:height+180,
+        radius:75,
+        style:{opacity:1}
+      },1300).star(star()).animate({
+        x:cenX*0.8,
+        y:height+180,
+        radius:80,
+        style:{opacity:1}
+      },1000).star(star()).animate({
+        x:cenX*0.1,
+        y:height+180,
+        radius:75,
+        style:{opacity:1}
+      },400).star(star()).animate({
+        x:-180,
+        y:cenY*1.8,
+        radius:90,
+        style:{opacity:1}
+      },900).star(star()).animate({
+        x:-180,
+        y:cenY*0.9,
+        radius:80,
+        style:{opacity:1}
+      },800,'easeInOutSine',function(){
+      i++;
+      stars();
+        if(i==4) {
+          words();
 
-  		shapely("#canvas").rect({
-  			x:0,
-  			y:0,
-  			width:width,
-  			height:height,
-  			style:{fill:"#000000"}
-  		}).star(star()).animate({
-  			x:0,
-  			y:-150,
-  			radius:70,
-  			style:{opacity:1}
-  		},1500).star(star()).animate({
-  			x:cenX*0.5,
-  			y:-150,
-  			radius:80,
-  			style:{opacity:1}
-  		},500).star(star()).animate({
-  			x:cenX*1.7,
-  			y:-200,
-  			radius:85,
-  			style:{opacity:1}
-  		},800).star(star()).animate({
-  			x:width+180,
-  			y:cenY/1.5,
-  			radius:90,
-  			style:{opacity:1}
-  		},1200).star(star()).animate({
-  			x:width+180,
-  			y:cenY*1.6,
-  			radius:65,
-  			style:{opacity:1}
-  		},900).star(star()).animate({
-  			x:cenX*1.8,
-  			y:height+180,
-  			radius:75,
-  			style:{opacity:1}
-  		},1300).star(star()).animate({
-  			x:cenX*0.8,
-  			y:height+180,
-  			radius:80,
-  			style:{opacity:1}
-  		},1000).star(star()).animate({
-  			x:cenX*0.1,
-  			y:height+180,
-  			radius:75,
-  			style:{opacity:1}
-  		},400).star(star()).animate({
-  			x:-180,
-  			y:cenY*1.8,
-  			radius:90,
-  			style:{opacity:1}
-  		},900).star(star()).animate({
-  			x:-180,
-  			y:cenY*0.9,
-  			radius:80,
-  			style:{opacity:1}
-  		},800,'easeInOutSine',function(){
-			i++;
-			stars();
-  			if(i==4) {
-  				words();
-  				
-  			}
-  		});
-  	}
-  	function words() {
+        }
+      });
+    }
+    function words() {
 
-  		shapely("#canvas").rect({
-  			x:0,
-  			y:0,
-  			width:width,
-  			height:height,
-  			style:{fill:"#000000"}
-  		}).text({
-  			value:"Shapely",
-			x:cenX-400,
-			y:-50,
-			style:{font:"80px Arial",
-				fill:"#ff00ff"}
-  		}).animate({
-  			y:cenY
-  		},800,'easeOutBounce').text({
-  			value:"is",
-			x:cenX-90,
-			y:-50,
-			style:{font:"80px Arial",
-				fill:"#ff00ff"}
-  		}).animate({
-  			y:cenY
-  		},1000,'easeOutBounce').text({
-  			value:"amazing!",
-			x:cenX-10,
-			y:-50,
-			style:{font:"80px Arial",
-				fill:"#ff00ff"}
-  		}).animate({
-  			y:cenY
-  		},1200,'easeOutBounce',function() {
-  			setTimeout(image,500);
-  		});
-  	}
+      shapely(ctx).rect({
+        x:0,
+        y:0,
+        width:width,
+        height:height,
+        style:{fill:"#000000"}
+      }).text({
+        value:"Shapely",
+      x:cenX-400,
+      y:-50,
+      style:{font:"80px Arial",
+        fill:"#ff00ff"}
+      }).animate({
+        y:cenY
+      },800,'easeOutBounce').text({
+        value:"is",
+      x:cenX-90,
+      y:-50,
+      style:{font:"80px Arial",
+        fill:"#ff00ff"}
+      }).animate({
+        y:cenY
+      },1000,'easeOutBounce').text({
+        value:"amazing!",
+      x:cenX-10,
+      y:-50,
+      style:{font:"80px Arial",
+        fill:"#ff00ff"}
+      }).animate({
+        y:cenY
+      },1200,'easeOutBounce',function() {
+        setTimeout(image,500);
+      });
+    }
 
-  	function image() {
-  		shapely("#canvas").rect({
-  			x:0,
-  			y:0,
-  			width:width,
-  			height:height,
-  			style:{fill:"#000000"}
-  		}).rect({
-  			x:0,
-  			y:0,
-  			width:1,
-  			height:1,
-  			cornerRadius:0,
-  			rotation:0,
-  			style:{fill:"#cccccc",strokeColor:"#999999"}
-  		}).animate({
-  			width:400,
-  			height:250,
-  			cornerRadius:50,
-  			rotation:360,
-  			x:cenX-200,
-  			y:cenY-150
-  		},1600).image({
-  			src:"me.jpg",
-  			y:cenY-125,
-  			x:-200,
-  			width:200,
-  			height:200
-  		}).animate({
-  			x:cenX-100
-  		},2000,'easeOutBounce');
-  	}
+    function image() {
+      shapely(ctx).rect({
+        x:0,
+        y:0,
+        width:width,
+        height:height,
+        style:{fill:"#000000"}
+      }).rect({
+        x:0,
+        y:0,
+        width:1,
+        height:1,
+        cornerRadius:0,
+        rotation:0,
+        style:{fill:"#cccccc",strokeColor:"#999999"}
+      }).animate({
+        width:400,
+        height:250,
+        cornerRadius:50,
+        rotation:360,
+        x:cenX-200,
+        y:cenY-150
+      },1600).image({
+        src:"me.jpg",
+        y:cenY-125,
+        x:-200,
+        width:200,
+        height:200
+      }).animate({
+        x:cenX-100
+      },2000,'easeOutBounce');
+    }
   });
   </script>
   <style>
   body {
-  	margin:0;
-  	padding:0;
-  	overflow:hidden;
+    margin:0;
+    padding:0;
+    overflow:hidden;
   }
   </style>
   <body>
-  	<canvas id="canvas"></canvas>
+    <canvas id="canvas"></canvas>
   </body>
   </html>
