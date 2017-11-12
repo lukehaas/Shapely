@@ -1,6 +1,6 @@
 ## Shapely - a library for drawing and animating with the canvas ##
 
-It drastically reduces the code necessary for drawing shapes on the canvas.
+It drastically reduces the code necessary for drawing shapes on the canvas, and has zero dependencies (including the DOM). 
 
 To invoke Shapely, start by passing it a canvas context (or array of canvas contexts).
 
@@ -94,7 +94,7 @@ text()
 image()
 - x
 - y
-- src
+- image
 - width
 - height
 - rotation - degrees

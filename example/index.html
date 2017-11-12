@@ -155,6 +155,8 @@
     }
 
     function image() {
+      var img = new Image();
+      img.src = "me.jpg";
       shapely(ctx).rect({
         x:0,
         y:0,
@@ -177,7 +179,7 @@
         x:cenX-200,
         y:cenY-150
       },1600).image({
-        src:"me.jpg",
+        image: img,
         y:cenY-125,
         x:-200,
         width:200,
