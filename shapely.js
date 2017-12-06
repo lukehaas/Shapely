@@ -9,7 +9,7 @@
 (function(global, factory) {
   "use strict";
   if (typeof define === 'function' && define.amd) {
-    define(['b'], factory);
+    define(factory);
   } else if(typeof module === 'object' && module.exports) {
     module.exports = factory(global);
   } else {
@@ -407,10 +407,10 @@
     }
     return this;
   }
-  shapely.fun.measureText = function() {    
+  shapely.fun.measureText = function() {
     var options = arguments[0] || {},
     elem = this[0] || {};
-    
+
     elem.save();
     if(options.style) {
       if(options.style.font) {
@@ -418,7 +418,7 @@
       }
     }
     elem.restore();
-    
+
     return elem.measureText(options.value)
   }
   shapely.fun.rect = shapely.fun.rectangle = function() {
