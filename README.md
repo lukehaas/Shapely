@@ -1,6 +1,6 @@
 ## Shapely - a library for drawing and animating with the canvas ##
 
-It drastically reduces the code necessary for drawing shapes on the canvas, and has zero dependencies (including the DOM). 
+It drastically reduces the code necessary for drawing shapes on the canvas, and has zero dependencies (including the DOM).
 
 To invoke Shapely, start by passing it a canvas context (or array of canvas contexts).
 
@@ -89,6 +89,10 @@ text()
 - x
 - y
 - value
+- align
+- baseline
+- maxWidth
+- lineHeight
 - rotation - degrees
 
 image()
@@ -101,7 +105,7 @@ image()
 
 ### Style ###
 
-The style object is a property within a shape object. It can recieve the following values:
+The style object is a property within a shape object. It can receive the following values:
 
 - fill - (hex or rgba)
 - strokeColor - (hex or rgba)
@@ -109,6 +113,7 @@ The style object is a property within a shape object. It can recieve the followi
 - strokeStyle - only relevant for lines (solid or dashed)
 - opacity: (0 - 1)
 - pattern - (image)
+- font - only relevant for text (example: 80px Arial)
 
 ##### shadow #####
 

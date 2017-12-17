@@ -1,5 +1,5 @@
 // ┌────────────────────────────────────────────────────────────────────┐ \\
-// │ Shapely 1.0 - JavaScript Canvas Library                            │ \\
+// │ Shapely 1.0.1 - JavaScript Canvas Library                          │ \\
 // ├────────────────────────────────────────────────────────────────────┤ \\
 // │ Copyright © 2013 Luke Haas (https://lukehaas.me)                   │ \\
 // ├────────────────────────────────────────────────────────────────────┤ \\
@@ -17,7 +17,7 @@
   }
 }(typeof window !== 'undefined' ? window : this, function(window, undefined) {
   var
-  version = "1.0",
+  version = "1.1",
   guid,
   stack,
   shapely = function( ctx ) {
@@ -388,7 +388,6 @@
       drawCircle(elem,shape,options);
     }
     return this;
-
   }
   shapely.fun.text = function() {
     var i = 0,
@@ -397,13 +396,48 @@
     options = arguments[0] || {},
     shape = new Shape();
     options.text = 1;
-    shape.extend(options);
+    shape.extend(options),
+    wordArr = options.value.split(" ");
+
+    if(options.maxWidth && options.style && options.style.font && !options.lineHeight){
+      var fontSize = parseInt(options.style.font);
+      if(fontSize > 0) {
+        options.lineHeight = fontSize;
+      }
+    }
 
     stack[guid++] = {shape:shape,method:drawText,options:options,animation:false};
     for(;i<l;i++) {
       elem = this[i] || {};
 
-      drawText(elem,shape,options);
+      if(wordArr.length > 1 && options.maxWidth && options.lineHeight && textWidth(elem,options).width > options.maxWidth) {
+        var line = '',
+        testLine = {
+          value: '',
+          style: {
+            font: options.style.font
+          }
+        },
+        metrics,
+        testWidth;
+        for(var n = 0; n < wordArr.length; n++) {
+          testLine.value = line + wordArr[n] + ' ';
+          metrics = textWidth(elem,testLine);
+          testWidth = metrics.width;
+          if (testWidth > options.maxWidth && n > 0) {
+            options.value = line;
+            drawText(elem,shape,options);
+            line = wordArr[n] + ' ';
+            shape.y += options.lineHeight;
+          } else {
+            line = testLine.value;
+          }
+        }
+        options.value = line;
+        drawText(elem,shape,options);
+      } else {
+        drawText(elem,shape,options);
+      }
     }
     return this;
   }
@@ -411,15 +445,7 @@
     var options = arguments[0] || {},
     elem = this[0] || {};
 
-    elem.save();
-    if(options.style) {
-      if(options.style.font) {
-        elem.font = options.style.font;
-      }
-    }
-    elem.restore();
-
-    return elem.measureText(options.value)
+    return textWidth(elem,options);
   }
   shapely.fun.rect = shapely.fun.rectangle = function() {
     var i = 0,
@@ -439,6 +465,18 @@
       drawRectangle(elem,shape,options);
       }
     return this;
+  }
+
+  function textWidth(elem,options) {
+    elem.save();
+    if(options.style) {
+      if(options.style.font) {
+        elem.font = options.style.font;
+      }
+    }
+    var metrics = elem.measureText(options.value);
+    elem.restore();
+    return metrics;
   }
 
   function drawLine(elem,shape,options) {
