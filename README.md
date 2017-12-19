@@ -103,6 +103,12 @@ image()
 - height
 - rotation - degrees
 
+### Getters ###
+
+textWidth()
+
+textHeight()
+
 ### Style ###
 
 The style object is a property within a shape object. It can receive the following values:

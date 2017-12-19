@@ -1,5 +1,5 @@
 // ┌────────────────────────────────────────────────────────────────────┐ \\
-// │ Shapely 1.0.1 - JavaScript Canvas Library                          │ \\
+// │ Shapely 1.0.2 - JavaScript Canvas Library                          │ \\
 // ├────────────────────────────────────────────────────────────────────┤ \\
 // │ Copyright © 2013 Luke Haas (https://lukehaas.me)                   │ \\
 // ├────────────────────────────────────────────────────────────────────┤ \\
@@ -391,13 +391,13 @@
   }
   shapely.fun.text = function() {
     var i = 0,
-    l = this.length,
-    elem,
-    options = arguments[0] || {},
-    shape = new Shape();
+        l = this.length,
+        elem,
+        options = arguments[0] || {},
+        shape = new Shape(),
+        wordArr = options.value.split(" ");
     options.text = 1;
-    shape.extend(options),
-    wordArr = options.value.split(" ");
+    shape.extend(options);
 
     if(options.maxWidth && options.style && options.style.font && !options.lineHeight){
       var fontSize = parseInt(options.style.font);
@@ -410,20 +410,18 @@
     for(;i<l;i++) {
       elem = this[i] || {};
 
-      if(wordArr.length > 1 && options.maxWidth && options.lineHeight && textWidth(elem,options).width > options.maxWidth) {
+      if(wordArr.length > 1 && options.maxWidth && options.lineHeight && getTextWidth(elem,options) > options.maxWidth) {
         var line = '',
-        testLine = {
-          value: '',
-          style: {
-            font: options.style.font
-          }
-        },
-        metrics,
-        testWidth;
+            testLine = {
+              value: '',
+              style: {
+                font: options.style.font
+              }
+            },
+            testWidth;
         for(var n = 0; n < wordArr.length; n++) {
           testLine.value = line + wordArr[n] + ' ';
-          metrics = textWidth(elem,testLine);
-          testWidth = metrics.width;
+          testWidth = getTextWidth(elem,testLine);
           if (testWidth > options.maxWidth && n > 0) {
             options.value = line;
             drawText(elem,shape,options);
@@ -441,11 +439,17 @@
     }
     return this;
   }
-  shapely.fun.measureText = function() {
+  shapely.fun.textWidth = function() {
     var options = arguments[0] || {},
     elem = this[0] || {};
 
-    return textWidth(elem,options);
+    return getTextWidth(elem,options);
+  }
+  shapely.fun.textHeight = function() {
+    var options = arguments[0] || {},
+    elem = this[0] || {};
+
+    return getTextHeight(elem,options);
   }
   shapely.fun.rect = shapely.fun.rectangle = function() {
     var i = 0,
@@ -467,7 +471,7 @@
     return this;
   }
 
-  function textWidth(elem,options) {
+  function getTextWidth(elem,options) {
     elem.save();
     if(options.style) {
       if(options.style.font) {
@@ -476,7 +480,49 @@
     }
     var metrics = elem.measureText(options.value);
     elem.restore();
-    return metrics;
+    return metrics.width;
+  }
+
+  function getTextHeight(elem,options) {
+    elem.save();
+
+    var fontSize = 10,
+        lineHeight = fontSize,
+        wordArr = options.value.split(" "),
+        height = fontSize;
+
+    if(options.style && options.style.font){
+      if(parseInt(options.style.font) > 0) {
+        fontSize = parseInt(options.style.font);
+        lineHeight = fontSize;
+        height = fontSize;
+        if(options.lineHeight) {
+          lineHeight = parseInt(options.lineHeight);
+        }
+      }
+    }
+    if(wordArr.length > 1 && options.maxWidth && getTextWidth(elem,options) > options.maxWidth) {
+      var line = '',
+          testLine = {
+            value: '',
+            style: {
+              font: options.style.font
+            }
+          },
+          testWidth;
+      for(var n = 0; n < wordArr.length; n++) {
+        testLine.value = line + wordArr[n] + ' ';
+        testWidth = getTextWidth(elem,testLine);
+        if (testWidth > options.maxWidth && n > 0) {
+          line = wordArr[n] + ' ';
+          height += fontSize;
+        } else {
+          line = testLine.value;
+        }
+      }
+    }
+    elem.restore();
+    return height;
   }
 
   function drawLine(elem,shape,options) {
