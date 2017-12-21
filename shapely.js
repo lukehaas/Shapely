@@ -1,5 +1,5 @@
 // ┌────────────────────────────────────────────────────────────────────┐ \\
-// │ Shapely 1.0.2 - JavaScript Canvas Library                          │ \\
+// │ Shapely 1.0.3 - JavaScript Canvas Library                          │ \\
 // ├────────────────────────────────────────────────────────────────────┤ \\
 // │ Copyright © 2013 Luke Haas (https://lukehaas.me)                   │ \\
 // ├────────────────────────────────────────────────────────────────────┤ \\
@@ -395,7 +395,8 @@
         elem,
         options = arguments[0] || {},
         shape = new Shape(),
-        wordArr = options.value.split(" ");
+        wordArr = options.value.split(" "),
+        originalValue = options.value;
     options.text = 1;
     shape.extend(options);
 
@@ -437,6 +438,7 @@
         drawText(elem,shape,options);
       }
     }
+    options.value = originalValue;
     return this;
   }
   shapely.fun.textWidth = function() {
